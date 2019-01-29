@@ -261,7 +261,7 @@ void TMController::newConnection()
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
             this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
             this->m_messageWindow->setConnectedState();
-            this->m_currentConnection->ping("2");
+            this->m_currentConnection->sendBinaryMessage(QByteArray("2"));
         }
     }
 }
@@ -270,6 +270,18 @@ void TMController::textMessageReceived(const QString &message)
 {
     qDebug() << "Message Received:"<<message;
     this->m_messageWindow->addMessage(QString("<b>You:</b> %1").arg(message));
+}
+
+void TMController::binaryMessageReceived(const QByteArray &message)
+{
+    if(message == QByteArray("1"))
+    {
+        this->m_mainWindow->setStatusBarText("Typing...",5000);
+    }
+    else if(message == QByteArray("2"))
+    {
+        this->m_mainWindow->setStatusBarText("Connected.",0);
+    }
 }
 
 void TMController::socketConnected()
@@ -294,7 +306,7 @@ void TMController::typingMessage()
         this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
         if(this->m_currentConnection)
         {
-            this->m_currentConnection->ping("1");
+            this->m_currentConnection->sendBinaryMessage(QByteArray("1"));;
         }
     }
 }
@@ -302,14 +314,5 @@ void TMController::typingMessage()
 void TMController::pong(quint64 elapsedTime, const QByteArray &payload)
 {
     Q_UNUSED(elapsedTime);
-
-    if(payload == QByteArray("1"))
-    {
-        this->m_mainWindow->setStatusBarText("Typing...",5000);
-    }
-    else if(payload == QByteArray("2"))
-    {
-        this->m_mainWindow->setStatusBarText("Connected.",0);
-    }
 }
 

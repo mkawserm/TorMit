@@ -59,6 +59,7 @@ private slots:
     void newConnection();
 
     void textMessageReceived(const QString &message);
+    void binaryMessageReceived(const QByteArray &message);
 
     void socketConnected();
     void socketDisconnected();
