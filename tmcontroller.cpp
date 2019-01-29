@@ -158,9 +158,7 @@ void TMController::sendButtonClicked()
 
 void TMController::connectButtonClicked()
 {
-    qDebug() << "void TMController::connectButtonClicked()";
-    this->m_messageWindow->disableConnectButton();
-    this->m_messageWindow->disableServiceId();
+    //qDebug() << "void TMController::connectButtonClicked()";
     if(this->m_currentConnection)
     {
         this->m_currentConnection->close();
@@ -169,6 +167,8 @@ void TMController::connectButtonClicked()
     {
         if(!this->m_messageWindow->getServiceId().isEmpty())
         {
+            this->m_messageWindow->disableConnectButton();
+            this->m_messageWindow->disableServiceId();
             this->m_messageWindow->clearMessage();
             this->m_currentConnection = new QWebSocket();
             this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
@@ -268,13 +268,15 @@ void TMController::newConnection()
             this->m_currentConnection->sendBinaryMessage(QByteArray("2"));
             this->m_mainWindow->setStatusBarText("Connected.",0);
             this->m_messageWindow->clearMessage();
+
+            qDebug() << "PEER ADDRESS:"<<this->m_currentConnection->peerAddress().toString();
         }
     }
 }
 
 void TMController::textMessageReceived(const QString &message)
 {
-    qDebug() << "Message Received:"<<message;
+    //qDebug() << "Message Received:"<<message;
     this->m_messageWindow->addMessage(QString("2nd: %1").arg(message));
 }
 
