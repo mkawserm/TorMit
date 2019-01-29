@@ -305,6 +305,7 @@ void TMController::socketDisconnected()
         this->m_currentConnection->deleteLater();
     }
     this->m_currentConnection = Q_NULLPTR;
+    this->m_mainWindow->setStatusBarText("Disconnected.",0);
 }
 
 void TMController::typingMessage()
