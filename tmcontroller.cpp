@@ -12,7 +12,7 @@ TMController::TMController(QObject *parent) : QObject(parent)
 
     this->m_server = new QWebSocketServer(QLatin1String("TorMit"),QWebSocketServer::NonSecureMode,this);
     this->m_server->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),1950));
-    this->m_server->setMaxPendingConnections(1);
+    //this->m_server->setMaxPendingConnections(1);
 
     this->connect(this->m_server,&QWebSocketServer::newConnection,this,&TMController::newConnection);
 
@@ -175,6 +175,7 @@ void TMController::connectButtonClicked()
 void TMController::torControllerReady()
 {
     QString torServicePrivateKey;
+    bool onionStarted = false;
     if(QFile::exists(this->m_serviceFilePath))
     {
         QFile f(this->m_serviceFilePath);
@@ -198,15 +199,16 @@ void TMController::torControllerReady()
                 f.write(torServicePrivateKey.toLocal8Bit());
                 f.close();
             }
+            onionStarted = true;
         }
     }
     else
     {
-        this->m_torController.startOnionService(torServicePrivateKey,1971,1971);
+        onionStarted = this->m_torController.startOnionService(torServicePrivateKey,1971,1971);
     }
 
 
-    if(!torServicePrivateKey.isEmpty())
+    if(onionStarted)
     {
         this->m_logWindow->addTorStatus("Connected");
         this->m_messageWindow->enableOnlyConnectWindow();
