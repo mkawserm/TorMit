@@ -147,7 +147,7 @@ void TMController::sendButtonClicked()
 {
     QString message = this->m_messageWindow->getInputMessage();
     this->m_messageWindow->clearInputMessage();
-    this->m_messageWindow->addMessage(QString("<b>1st:</b> %1").arg(message));
+    this->m_messageWindow->addMessage(QString("1st: %1").arg(message));
 
     if(this->m_currentConnection)
     {
@@ -275,7 +275,7 @@ void TMController::newConnection()
 void TMController::textMessageReceived(const QString &message)
 {
     qDebug() << "Message Received:"<<message;
-    this->m_messageWindow->addMessage(QString("<b>2nd:</b> %1").arg(message));
+    this->m_messageWindow->addMessage(QString("2nd: %1").arg(message));
 }
 
 void TMController::binaryMessageReceived(const QByteArray &message)

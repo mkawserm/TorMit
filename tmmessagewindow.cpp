@@ -18,7 +18,7 @@ TMMessageWindow::~TMMessageWindow()
 
 void TMMessageWindow::addMessage(const QString &message)
 {
-    this->ui->messageBox->appendHtml(message+QLatin1String("</br>"));
+    this->ui->messageBox->appendPlainText(message);
 }
 
 void TMMessageWindow::clearMessage()
