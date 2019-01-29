@@ -126,7 +126,7 @@ void HSTorProcess::generateTorrcFile(const QString &filePath) const
             p.setArguments(QStringList() << "--hash-password"<<this->m_torControlPassword);
             p.start(QIODevice::ReadOnly);
             p.waitForReadyRead();
-            QByteArray hp = p.readAllStandardOutput();
+            QString hp = p.readAllStandardOutput();
             p.close();
             p.waitForFinished();
 
@@ -135,7 +135,23 @@ void HSTorProcess::generateTorrcFile(const QString &filePath) const
             f.write("\n");
 
             f.write("HashedControlPassword ");
-            f.write(hp);
+            if(hp.startsWith(QLatin1String("16:")))
+            {
+                f.write(hp.toLocal8Bit());
+            }
+            else
+            {
+                QStringList hpl = hp.split("\n");
+                for(const QString &nhp:hpl){
+                    if(nhp.startsWith(QLatin1String("16:")))
+                    {
+                        hp = nhp;
+                        break;
+                    }
+                }
+                f.write(hp.toLocal8Bit());
+            }
+
         }
 
         if(!this->m_torDataDirectory.isEmpty()){
