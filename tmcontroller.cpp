@@ -160,6 +160,7 @@ void TMController::connectButtonClicked()
 {
     qDebug() << "void TMController::connectButtonClicked()";
     this->m_messageWindow->disableConnectButton();
+    this->m_messageWindow->disableServiceId();
     if(this->m_currentConnection)
     {
         this->m_currentConnection->close();
