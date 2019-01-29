@@ -11,7 +11,7 @@ TMController::TMController(QObject *parent) : QObject(parent)
     this->m_logWindow = Q_NULLPTR;
 
     this->m_server = new QWebSocketServer(QLatin1String("TorMit"),QWebSocketServer::NonSecureMode,this);
-    this->m_server->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),1950));
+    this->m_server->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
     //this->m_server->setMaxPendingConnections(1);
 
     this->connect(this->m_server,&QWebSocketServer::newConnection,this,&TMController::newConnection);
@@ -151,6 +151,7 @@ void TMController::sendButtonClicked()
 void TMController::connectButtonClicked()
 {
     qDebug() << "void TMController::connectButtonClicked()";
+    this->m_messageWindow->disableConnectButton();
     if(this->m_currentConnection)
     {
         this->m_currentConnection->close();
@@ -160,7 +161,7 @@ void TMController::connectButtonClicked()
         if(!this->m_messageWindow->getServiceId().isEmpty())
         {
             this->m_currentConnection = new QWebSocket();
-            this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),1950));
+            this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
@@ -233,6 +234,7 @@ void TMController::newConnection()
         if(this->m_server->hasPendingConnections())
         {
             QWebSocket *nc = this->m_server->nextPendingConnection();
+            nc->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
             nc->sendTextMessage("Try later.");
             nc->close();
             nc->deleteLater();
@@ -243,7 +245,7 @@ void TMController::newConnection()
         if(this->m_server->hasPendingConnections())
         {
             this->m_currentConnection = this->m_server->nextPendingConnection();
-            this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),1950));
+            this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);

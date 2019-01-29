@@ -117,6 +117,16 @@ void TMMessageWindow::setDisconnectedState()
     this->ui->sendBox->setEnabled(false);
 }
 
+void TMMessageWindow::enableConnectButton()
+{
+    this->ui->connectBox->setEnabled(true);
+}
+
+void TMMessageWindow::disableConnectButton()
+{
+    this->ui->connectBox->setEnabled(false);
+}
+
 QString TMMessageWindow::connectButtonText()
 {
     return this->ui->connectBox->text();

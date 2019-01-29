@@ -40,6 +40,9 @@ public slots:
     void setConnectedState();
     void setDisconnectedState();
 
+    void enableConnectButton();
+    void disableConnectButton();
+
 signals:
     void sendButtonClicked();
     void connectButtonClicked();
