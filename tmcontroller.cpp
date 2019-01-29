@@ -173,6 +173,7 @@ void TMController::connectButtonClicked()
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
+            this->connect(this->m_currentConnection,&QWebSocket::binaryMessageReceived,this,&TMController::binaryMessageReceived);
             this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
 
             this->m_mainWindow->setStatusBarText("Connecting...",0);
@@ -259,6 +260,7 @@ void TMController::newConnection()
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
+            this->connect(this->m_currentConnection,&QWebSocket::binaryMessageReceived,this,&TMController::binaryMessageReceived);
             this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
             this->m_messageWindow->setConnectedState();
             this->m_currentConnection->sendBinaryMessage(QByteArray("2"));
