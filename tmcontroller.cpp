@@ -306,13 +306,20 @@ void TMController::socketDisconnected()
 
 void TMController::typingMessage()
 {
-    if((QDateTime::currentMSecsSinceEpoch() - this->m_typingTimer)>=3000)
+    if(this->m_messageWindow->messageLength()>2)
+    {
+        if((QDateTime::currentMSecsSinceEpoch() - this->m_typingTimer)>=3000)
+        {
+            this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
+            if(this->m_currentConnection)
+            {
+                this->m_currentConnection->sendBinaryMessage(QByteArray("1"));;
+            }
+        }
+    }
+    else
     {
         this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
-        if(this->m_currentConnection)
-        {
-            this->m_currentConnection->sendBinaryMessage(QByteArray("1"));;
-        }
     }
 }
 

@@ -43,6 +43,8 @@ public slots:
     void enableConnectButton();
     void disableConnectButton();
 
+    int messageLength();
+
 signals:
     void sendButtonClicked();
     void connectButtonClicked();

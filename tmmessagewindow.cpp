@@ -129,6 +129,11 @@ void TMMessageWindow::disableConnectButton()
     this->ui->connectBox->setEnabled(false);
 }
 
+int TMMessageWindow::messageLength()
+{
+    return this->ui->messageSendBox->text().length();
+}
+
 QString TMMessageWindow::connectButtonText()
 {
     return this->ui->connectBox->text();
