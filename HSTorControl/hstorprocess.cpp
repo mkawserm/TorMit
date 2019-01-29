@@ -41,7 +41,11 @@ HSTorProcess::HSTorProcess(QObject *parent) : QObject(parent)
 
 void HSTorProcess::setTorExe(const QString &torExe)
 {
+#if defined(Q_OS_WIN32)
+    this->m_torExe = "\"" + torExe + "\"";
+#else
     this->m_torExe = torExe;
+#endif
 }
 
 void HSTorProcess::setTorPort(const quint16 &torPort)
