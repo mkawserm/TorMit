@@ -147,10 +147,11 @@ void TMController::sendButtonClicked()
 {
     QString message = this->m_messageWindow->getInputMessage();
     this->m_messageWindow->clearInputMessage();
-    this->m_messageWindow->addMessage(QString("<b>Me:</b> %1").arg(message));
+    this->m_messageWindow->addMessage(QString("<b>1st:</b> %1").arg(message));
 
     if(this->m_currentConnection)
     {
+        this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
         this->m_currentConnection->sendTextMessage(message);
     }
 }
@@ -271,7 +272,7 @@ void TMController::newConnection()
 void TMController::textMessageReceived(const QString &message)
 {
     qDebug() << "Message Received:"<<message;
-    this->m_messageWindow->addMessage(QString("<b>You:</b> %1").arg(message));
+    this->m_messageWindow->addMessage(QString("<b>2nd:</b> %1").arg(message));
 }
 
 void TMController::binaryMessageReceived(const QByteArray &message)
@@ -316,5 +317,6 @@ void TMController::typingMessage()
 void TMController::pong(quint64 elapsedTime, const QByteArray &payload)
 {
     Q_UNUSED(elapsedTime);
+    Q_UNUSED(payload);
 }
 
