@@ -149,11 +149,13 @@ void HSTorProcess::generateTorrcFile(const QString &filePath) const
                         break;
                     }
                 }
+                hp = hp.replace("\r","");
                 f.write(hp.toLocal8Bit());
             }
-
         }
 
+        f.write("\n");
+        f.write("\n");
         if(!this->m_torDataDirectory.isEmpty()){
             f.write("DataDirectory ");
             f.write(this->m_torDataDirectory.toLocal8Bit());
