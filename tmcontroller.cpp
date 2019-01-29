@@ -146,6 +146,11 @@ void TMController::sendButtonClicked()
     QString message = this->m_messageWindow->getInputMessage();
     this->m_messageWindow->clearInputMessage();
     this->m_messageWindow->addMessage(QString("<b>Me:</b> %1").arg(message));
+
+    if(this->m_currentConnection)
+    {
+        this->m_currentConnection->sendTextMessage(message);
+    }
 }
 
 void TMController::connectButtonClicked()
@@ -255,6 +260,8 @@ void TMController::newConnection()
 
 void TMController::textMessageReceived(const QString &message)
 {
+    qDebug() << "Message Received:"<<message;
+
     this->m_messageWindow->addMessage(QString("<b>You:</b> %1").arg(message));
 }
 
@@ -268,7 +275,7 @@ void TMController::socketDisconnected()
     this->m_messageWindow->setDisconnectedState();
     if(this->m_currentConnection)
     {
-        delete  this->m_currentConnection;
+        this->m_currentConnection->deleteLater();
     }
     this->m_currentConnection = Q_NULLPTR;
 }
