@@ -54,11 +54,13 @@ void TMMessageWindow::clearServiceId()
 void TMMessageWindow::activateServiceId()
 {
     this->ui->serviceIdBox->setReadOnly(false);
+    this->ui->serviceIdBox->setEnabled(true);
 }
 
 void TMMessageWindow::disableServiceId()
 {
     this->ui->serviceIdBox->setReadOnly(true);
+    this->ui->serviceIdBox->setEnabled(false);
 }
 
 QString TMMessageWindow::myServiceId()

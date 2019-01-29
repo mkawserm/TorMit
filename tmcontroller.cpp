@@ -280,7 +280,7 @@ void TMController::binaryMessageReceived(const QByteArray &message)
 {
     if(message == QByteArray("1"))
     {
-        this->m_mainWindow->setStatusBarText("Typing...",5000);
+        this->m_mainWindow->setStatusBarText("Typing...",3000);
     }
     else if(message == QByteArray("2"))
     {
@@ -291,6 +291,7 @@ void TMController::binaryMessageReceived(const QByteArray &message)
 void TMController::socketConnected()
 {
     this->m_messageWindow->setConnectedState();
+    this->m_messageWindow->clearMessage();
 }
 
 void TMController::socketDisconnected()
@@ -305,7 +306,7 @@ void TMController::socketDisconnected()
 
 void TMController::typingMessage()
 {
-    if((QDateTime::currentMSecsSinceEpoch() - this->m_typingTimer)>=5000)
+    if((QDateTime::currentMSecsSinceEpoch() - this->m_typingTimer)>=3000)
     {
         this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
         if(this->m_currentConnection)
