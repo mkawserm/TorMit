@@ -266,6 +266,8 @@ void TMController::newConnection()
             this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
             this->m_messageWindow->setConnectedState();
             this->m_currentConnection->sendBinaryMessage(QByteArray("2"));
+            this->m_mainWindow->setStatusBarText("Connected.",0);
+            this->m_messageWindow->clearMessage();
         }
     }
 }
@@ -291,7 +293,6 @@ void TMController::binaryMessageReceived(const QByteArray &message)
 void TMController::socketConnected()
 {
     this->m_messageWindow->setConnectedState();
-    this->m_messageWindow->clearMessage();
 }
 
 void TMController::socketDisconnected()
