@@ -13,11 +13,11 @@ HSTorController::HSTorController(QObject *parent) : QObject(parent)
 {
 
 #if defined(Q_OS_WIN32)
-    this->m_torExe = QCoreApplication::applicationDirPath()+QLatin1String("/tor.exe");
+    this->m_torExe = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()+QLatin1String("/tor.exe"));
 #elif defined (Q_OS_ANDROID)
-    this->m_torExe = QCoreApplication::applicationDirPath()+QLatin1String("/tor");
+    this->m_torExe = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()+QLatin1String("/tor"));
 #elif defined (Q_OS_MAC) || defined (Q_OS_LINUX)
-    this->m_torExe = QCoreApplication::applicationDirPath()+QLatin1String("/tor");
+    this->m_torExe = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()+QLatin1String("/tor"));
 #endif
 
     this->m_torControllerReady = false;
