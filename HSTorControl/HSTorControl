@@ -1,0 +1,5 @@
+#include "hsremotetorcontroller.h"
+#include "hstorcommand.h"
+#include "hstorcontroller.h"
+#include "hstorhiddenservice.h"
+#include "hstorprocess.h"
