@@ -12,3 +12,13 @@ TMMainWindow::~TMMainWindow()
 {
     delete ui;
 }
+
+void TMMainWindow::setStatusBarText(const QString &message, int stime)
+{
+    this->ui->statusBar->showMessage(message,stime);
+}
+
+void TMMainWindow::clearStatusBarText()
+{
+    this->ui->statusBar->clearMessage();
+}

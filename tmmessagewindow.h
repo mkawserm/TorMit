@@ -46,9 +46,12 @@ public slots:
 signals:
     void sendButtonClicked();
     void connectButtonClicked();
+    void typingMessage();
 
 private slots:
     void on_messageSendBox_returnPressed();
+
+    void on_messageSendBox_textChanged(const QString &arg1);
 
 private:
     Ui::TMMessageWindow *ui;

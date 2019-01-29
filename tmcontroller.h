@@ -3,11 +3,13 @@
 
 #include <QDir>
 #include <QFile>
+#include <QTimer>
 #include <QObject>
 #include <QWebSocket>
 #include <QNetworkProxy>
 #include <QStandardPaths>
 #include <QWebSocketServer>
+#include <QDateTime>
 
 #include <HSTorControl>
 
@@ -61,8 +63,12 @@ private slots:
     void socketConnected();
     void socketDisconnected();
 
+    void typingMessage();
+    void pong(quint64 elapsedTime, const QByteArray &payload);
+
 private:
     QString m_serviceFilePath;
+    qint64 m_typingTimer;
 
     TMMainWindow *m_mainWindow;
     TMLogWindow *m_logWindow;

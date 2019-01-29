@@ -9,6 +9,7 @@ TMController::TMController(QObject *parent) : QObject(parent)
     this->m_centralWidget = Q_NULLPTR;
     this->m_messageWindow = Q_NULLPTR;
     this->m_logWindow = Q_NULLPTR;
+    this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
 
     this->m_server = new QWebSocketServer(QLatin1String("TorMit"),QWebSocketServer::NonSecureMode,this);
     this->m_server->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
@@ -78,6 +79,7 @@ void TMController::setMainWindow(TMMainWindow *mainWindow)
 
     this->connect(this->m_messageWindow,&TMMessageWindow::sendButtonClicked,this,&TMController::sendButtonClicked);
     this->connect(this->m_messageWindow,&TMMessageWindow::connectButtonClicked,this,&TMController::connectButtonClicked);
+    this->connect(this->m_messageWindow,&TMMessageWindow::typingMessage,this,&TMController::typingMessage);
 }
 
 void TMController::start()
@@ -165,12 +167,15 @@ void TMController::connectButtonClicked()
     {
         if(!this->m_messageWindow->getServiceId().isEmpty())
         {
+            this->m_messageWindow->clearMessage();
             this->m_currentConnection = new QWebSocket();
             this->m_currentConnection->setProxy(QNetworkProxy(QNetworkProxy::Socks5Proxy,QLatin1String("127.0.0.1"),9050));
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
+            this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
 
+            this->m_mainWindow->setStatusBarText("Connecting...",0);
             this->m_currentConnection->open(
                         QUrl(QString("ws://%1.onion:1971").arg(this->m_messageWindow->getServiceId()))
                         );
@@ -254,7 +259,9 @@ void TMController::newConnection()
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
+            this->connect(this->m_currentConnection,&QWebSocket::pong,this,&TMController::pong);
             this->m_messageWindow->setConnectedState();
+            this->m_currentConnection->ping("2");
         }
     }
 }
@@ -279,3 +286,30 @@ void TMController::socketDisconnected()
     }
     this->m_currentConnection = Q_NULLPTR;
 }
+
+void TMController::typingMessage()
+{
+    if((QDateTime::currentMSecsSinceEpoch() - this->m_typingTimer)>=5000)
+    {
+        this->m_typingTimer = QDateTime::currentMSecsSinceEpoch();
+        if(this->m_currentConnection)
+        {
+            this->m_currentConnection->ping("1");
+        }
+    }
+}
+
+void TMController::pong(quint64 elapsedTime, const QByteArray &payload)
+{
+    Q_UNUSED(elapsedTime);
+
+    if(payload == QByteArray("1"))
+    {
+        this->m_mainWindow->setStatusBarText("Typing...",5000);
+    }
+    else if(payload == QByteArray("2"))
+    {
+        this->m_mainWindow->setStatusBarText("Connected.",0);
+    }
+}
+

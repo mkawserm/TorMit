@@ -139,3 +139,12 @@ void TMMessageWindow::on_messageSendBox_returnPressed()
         emit sendButtonClicked();
     }
 }
+
+void TMMessageWindow::on_messageSendBox_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    if(!ui->messageSendBox->text().isEmpty())
+    {
+        emit typingMessage();
+    }
+}
