@@ -254,6 +254,7 @@ void TMController::newConnection()
             this->connect(this->m_currentConnection,&QWebSocket::connected,this,&TMController::socketConnected);
             this->connect(this->m_currentConnection,&QWebSocket::disconnected,this,&TMController::socketDisconnected);
             this->connect(this->m_currentConnection,&QWebSocket::textMessageReceived,this,&TMController::textMessageReceived);
+            this->m_messageWindow->setConnectedState();
         }
     }
 }
@@ -261,7 +262,6 @@ void TMController::newConnection()
 void TMController::textMessageReceived(const QString &message)
 {
     qDebug() << "Message Received:"<<message;
-
     this->m_messageWindow->addMessage(QString("<b>You:</b> %1").arg(message));
 }
 
