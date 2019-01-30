@@ -15,6 +15,12 @@ HSTorUtility::~HSTorUtility()
 
 QByteArray HSTorUtility::torControlHashedPasswordNormal(const QByteArray &password)
 {
+    /**
+     * Implementation standard followed from here
+     * Link: https://www.ietf.org/rfc/rfc2440.txt
+     * See at the section: 3.6.1.3. Iterated and Salted S2K
+    **/
+
     QByteArray salt;
     for(quint8 i=0;i<8;++i)
     {
