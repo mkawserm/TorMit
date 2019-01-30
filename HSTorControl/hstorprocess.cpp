@@ -1,3 +1,4 @@
+#include "hstorutility.h"
 #include "hstorprocess.h"
 #include "hstorhiddenservice.h"
 
@@ -120,38 +121,40 @@ void HSTorProcess::generateTorrcFile(const QString &filePath) const
         if(!this->m_torControlPassword.isEmpty())
         {
             //qDebug()<<"Pass:" << this->m_torControlPassword;
-
-            QProcess p;
-            p.setProgram(this->m_torExe);
-            p.setArguments(QStringList() << "--hash-password"<<this->m_torControlPassword);
-            p.start(QIODevice::ReadOnly);
-            p.waitForReadyRead();
-            QString hp = p.readAllStandardOutput();
-            p.close();
-            p.waitForFinished();
-
             f.write("ControlPort ");
             f.write(QString::number(this->m_torControlPort).toLocal8Bit());
             f.write("\n");
 
             f.write("HashedControlPassword ");
-            if(hp.startsWith(QLatin1String("16:")))
-            {
-                f.write(hp.toLocal8Bit());
-            }
-            else
-            {
-                QStringList hpl = hp.split("\n");
-                for(const QString &nhp:hpl){
-                    if(nhp.startsWith(QLatin1String("16:")))
-                    {
-                        hp = nhp;
-                        break;
-                    }
-                }
-                hp = hp.replace("\r","");
-                f.write(hp.toLocal8Bit());
-            }
+            f.write(HSTorUtility::torControlHashedPasswordNormal(this->m_torControlPassword.toLocal8Bit()));
+            f.write("\n");
+
+            //            QProcess p;
+            //            p.setProgram(this->m_torExe);
+            //            p.setArguments(QStringList() << "--hash-password"<<this->m_torControlPassword);
+            //            p.start(QIODevice::ReadOnly);
+            //            p.waitForReadyRead();
+            //            QString hp = p.readAllStandardOutput();
+            //            p.close();
+            //            p.waitForFinished();
+            //            if(hp.startsWith(QLatin1String("16:")))
+            //            {
+            //                f.write(hp.toLocal8Bit());
+            //            }
+            //            else
+            //            {
+            //                QStringList hpl = hp.split("\n");
+            //                for(const QString &nhp:hpl){
+            //                    if(nhp.startsWith(QLatin1String("16:")))
+            //                    {
+            //                        hp = nhp;
+            //                        break;
+            //                    }
+            //                }
+            //                hp = hp.replace("\r","");
+            //                f.write(hp.toLocal8Bit());
+            //            }
+
         }
 
         f.write("\n");
